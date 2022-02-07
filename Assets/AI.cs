@@ -4,93 +4,118 @@ using UnityEngine;
 
 public class AI : MonoBehaviour
 {
-    public int state;
-    public Transform thePlayer;
-    private float waitWhileWalking;
-    private float timeWhenWalking;
-    public float baseWait = 5;
-    public float baseWalkWait = 3;
-    public float moveSpeed;
-    public float chaseSpeed;
-    public Rigidbody rb;
-    private float attackTime;
-    public GameObject theAttack;
+    private float nextStateTimer;
+    private string stateText;
+    Animator anim;
+    public float speed;
+    private Quaternion _lookRotation;
+    Rigidbody rb;
+
+    enum States
+    {
+        Idle,
+        Turn,
+        Walk
+    }
+
+    States state;
+
     float x;
     float y;
     float z;
-    Vector3 pos;
-    public Animator anim;
+    public Vector3 pos;
 
+    // Start is called before the first frame update
     void Start()
     {
-        state = 0;
-        waitWhileWalking = baseWait;
-        rb = GetComponent<Rigidbody>();
-        timeWhenWalking = baseWalkWait;
-        attackTime = 1.5f;
+        state = States.Idle;
+        nextStateTimer = 2;
         anim = GetComponent<Animator>();
+        rb = GetComponent<Rigidbody>();
     }
-    void Update()
+
+    // Update is called once per frame
+    void LateUpdate()
     {
-        if (state == 0)
+        ProcessStates();
+
+    }
+    // State logic - switch states depending on what logic we want to apply
+    void ProcessStates()
+    {
+        nextStateTimer -= Time.deltaTime;
+
+        if (state == States.Idle)
         {
             Idle();
+
+            if (nextStateTimer < 0)
+            {
+                state = States.Turn;
+                nextStateTimer = 3;
+            }
         }
-        if (state == 1)
+
+        if (state == States.Turn)
         {
-            Walk();
+
+            Turn();
+            if (nextStateTimer < 0)
+            {
+                state = States.Walk;
+                nextStateTimer = 1;
+            }
 
         }
-        if (state == 2)
+
+        if (state == States.Walk)
         {
-            Attack();
+            if (nextStateTimer < 0)
+            {
+                state = States.Idle;
+                nextStateTimer = 3;
+            }
+
+            Walk();
         }
-        if (waitWhileWalking <= 0)
-        {
-            Debug.Log("waitOver");
-            waitWhileWalking = baseWait;
-            state = 2;
-        }
+
+
+
     }
+
+
+    // Different AI Update methods
     void Idle()
     {
-        //Debug.Log("isIdle");
-        waitWhileWalking -= Time.deltaTime;
-        x = Random.Range(-14.45f, 14.45f);
-        z = Random.Range(-19, -0.73f);
-        y = 0.5f;
-        pos = new Vector3(x, y, z);
+        print("Idle");
+        stateText = "Idle";
         anim.SetBool("IsRunning", false);
+        x = Random.Range(-1, 5f);
+        z = Random.Range(-1f, 5f);
+        y = 0f;
+        pos = new Vector3(x, y, z);
+
+    }
+
+    void Turn()
+    {
+        print("Turn");
+        stateText = "Turn";
+        //transform.LookAt(pos);
+        _lookRotation = Quaternion.LookRotation(pos);
+        transform.rotation = Quaternion.Slerp(transform.rotation, _lookRotation, Time.deltaTime * 4);
+        Debug.Log(pos);
+
     }
 
     void Walk()
     {
-        transform.LookAt(pos);
-        transform.position = Vector3.MoveTowards(transform.position, pos, moveSpeed * Time.deltaTime);
-        timeWhenWalking -= Time.deltaTime;
-        if (timeWhenWalking <= 0)
-        {
-            state = 0 ;
-            timeWhenWalking = baseWalkWait;
-        }
         anim.SetBool("IsRunning", true);
+        print("Walk");
+        stateText = "Walk";
+        //transform.position = Vector3.MoveTowards(transform.position, pos, speed* Time.deltaTime);
+        rb.velocity = pos * speed * Time.deltaTime;
+        Debug.Log(pos);
     }
-    void Attack()
-    {
-        // Quaternion toRotate = Quaternion.FromToRotation(transform.forward, thePlayer.position);
-        // transform.rotation = Quaternion.Lerp(transform.rotation, toRotate, 15f * Time.deltaTime);
-        //transform.LookAt(thePlayer);
-        var rotation = Quaternion.LookRotation(thePlayer.position - transform.position);
-        transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * 5f);
-        transform.position += transform.forward * chaseSpeed * Time.deltaTime;
-        attackTime -= Time.deltaTime;
-        if (attackTime <= 0)
-        {
-            state = 1;
-            attackTime = baseWait;
-        }
 
-
-    }
 }
-
