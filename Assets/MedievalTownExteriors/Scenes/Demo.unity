@@ -651,6 +651,13 @@ MonoBehaviour:
     pitch: 1
     loop: 0
     source: {fileID: 0}
+  - name: Play Sound
+    clip: {fileID: 8300000, guid: b9eff85afb9adbc4681183de1c9bc674, type: 3}
+    outputAudioMixerGroup: {fileID: 0}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
   music:
   - name: Menu Music
     clip: {fileID: 8300000, guid: a3ca344a2ea1b7a4f898adb99100e239, type: 3}
@@ -3252,9 +3259,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   masterMixer: {fileID: 24100000, guid: 9ae007f44bfad464b9f1f7d01157a82c, type: 2}
-  master: {fileID: 244094146}
-  music: {fileID: 61579347}
-  sfx: {fileID: 1087094362}
+  master: {fileID: 120851538}
+  music: {fileID: 1153101860}
+  sfx: {fileID: 1242063529}
 --- !u!4 &447079177
 Transform:
   m_ObjectHideFlags: 0
@@ -16770,9 +16777,9 @@ GameObject:
   - component: {fileID: 1787122789}
   - component: {fileID: 1787122788}
   - component: {fileID: 1787122787}
-  - component: {fileID: 1787122790}
   - component: {fileID: 1787122791}
   - component: {fileID: 1787122792}
+  - component: {fileID: 1787122790}
   m_Layer: 5
   m_Name: PlayButton
   m_TagString: Untagged
@@ -16845,7 +16852,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1787122790}
-        m_TargetAssemblyTypeName: ButtonNoise, Assembly-CSharp
+        m_TargetAssemblyTypeName: PlayButtonNoise, Assembly-CSharp
         m_MethodName: PlayAudio
         m_Mode: 1
         m_Arguments:
@@ -16915,7 +16922,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1787122785}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cfc3b3613490b7b4d902ff5c1196967b, type: 3}
+  m_Script: {fileID: 11500000, guid: 7a9642dbf29200c4fbbdb874f1d1189a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &1787122791
